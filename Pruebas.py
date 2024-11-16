@@ -64,8 +64,8 @@ if menu == "Registrar Usuario":
         
         if submitted:
             if nombre and correo:
-                nuevo_usuario = {"Nombre": nombre, "Correo": correo, "Fecha de Registro": fecha_registro}
-                st.session_state["users_data"] = pd.concat(
+                nuevo_usuario = {"nit / CC": nit,"Nombre": nombre, "Necesidades": necesidad}
+                st.session_state["org_data"] = pd.concat(
                     [st.session_state["org_data"], pd.DataFrame([nuevo_usuario])],
                     ignore_index=True
                 )
