@@ -3,7 +3,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 # Crear un DataFrame en memoria para almacenar la información
-# (En un entorno real, esto se conectaría a una base de datos)
 if "users_data" not in st.session_state:
     st.session_state["users_data"] = pd.DataFrame(columns=["Nombre", "Correo", "Fecha de Registro"])
 
@@ -48,21 +47,26 @@ elif menu == "Consultar Usuarios":
             mime="text/csv",
         )
 
-# 3. Generar alertas de fechas
+# 3. Generar alertas
 elif menu == "Generar Alertas":
-    st.title("Generador de Alertas por Fechas")
+    st.title("Alertas de Registros Recientes")
     
     if st.session_state["users_data"].empty:
         st.warning("No hay usuarios registrados.")
     else:
-        dias_alerta = st.number_input("Días para generar alerta:", min_value=1, value=7)
-        fecha_limite = datetime.today() - timedelta(days=dias_alerta)
-        usuarios_alerta = st.session_state["users_data"][
-            st.session_state["users_data"]["Fecha de Registro"] <= fecha_limite
+        # Calcular diferencia de fechas
+        hoy = datetime.today().date()
+        st.session_state["users_data"]["Días desde registro"] = (
+            hoy - pd.to_datetime(st.session_state["users_data"]["Fecha de Registro"]).dt.date
+        ).dt.days
+        
+        # Filtrar usuarios registrados en los últimos 7 días
+        usuarios_recientes = st.session_state["users_data"][
+            st.session_state["users_data"]["Días desde registro"] < 7
         ]
         
-        if usuarios_alerta.empty:
-            st.info("No hay usuarios con fechas de alerta.")
+        if usuarios_recientes.empty:
+            st.info("No hay usuarios registrados en los últimos 7 días.")
         else:
-            st.warning(f"Usuarios registrados hace más de {dias_alerta} días:")
-            st.dataframe(usuarios_alerta)
+            st.success("Usuarios registrados en los últimos 7 días:")
+            st.dataframe(usuarios_recientes)
