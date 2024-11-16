@@ -83,4 +83,3 @@ elif menu == "Organizaciones y personas":
         st.warning("No hay usuarios registrados.")
     else:
         st.dataframe(st.session_state["users2_data"])
-        )
