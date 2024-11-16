@@ -54,10 +54,15 @@ elif menu == "Generar Alertas":
     if st.session_state["users_data"].empty:
         st.warning("No hay usuarios registrados.")
     else:
+        # Convertir la columna "Fecha de Registro" al formato datetime
+        st.session_state["users_data"]["Fecha de Registro"] = pd.to_datetime(
+            st.session_state["users_data"]["Fecha de Registro"]
+        )
+        
         # Calcular diferencia de fechas
         hoy = datetime.today().date()
         st.session_state["users_data"]["Días desde registro"] = (
-            hoy - pd.to_datetime(st.session_state["users_data"]["Fecha de Registro"]).dt.date
+            hoy - st.session_state["users_data"]["Fecha de Registro"].dt.date
         ).dt.days
         
         # Filtrar usuarios registrados en los últimos 7 días
