@@ -24,7 +24,7 @@ if menu == "Registrar Alimento":
         submitted = st.form_submit_button("Registrar")
         
         if submitted:
-            if alimento and tipo and cantidad and fecha_recepcion and fecha_registro:
+            if alimento and tipo and cantidad and fecha_recepcion and fecha_caducidad:
                 hoy = datetime.today()
                 dias_cad = hoy - fecha_caducidad
                 if dias_cad > 7:
@@ -33,7 +33,7 @@ if menu == "Registrar Alimento":
                     estado = ("Proximo a caducar")
                 else:
                     estado = ("caducado")
-                nuevo_usuario = {"Alimento": alimento,"Tipo": tipo, "Cantidad": cantidad, "Fecha de recepción": fecha_recepcion, "Fecha de caducidad": fecha_registro, "Estado": estado}
+                nuevo_usuario = {"Alimento": alimento,"Tipo": tipo, "Cantidad": cantidad, "Fecha de recepción": fecha_recepcion, "Fecha de caducidad": fecha_caducidad, "Estado": estado}
                 st.session_state["users_data"] = pd.concat(
                     [st.session_state["users_data"], pd.DataFrame([nuevo_usuario])],
                     ignore_index=True
