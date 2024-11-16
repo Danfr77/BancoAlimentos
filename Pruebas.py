@@ -5,10 +5,10 @@ from datetime import datetime, timedelta
 # Crear un DataFrame en memoria para almacenar la información
 if "users_data" not in st.session_state:
     st.session_state["users_data"] = pd.DataFrame(columns=["Alimento","Tipo", "Cantidad", "Fecha de recepción", "Fecha de caducidad", "Días para caducar"])
-
+    st.session_state["org_data"] = pd.DataFrame(columns=["nit / CC","Nombre", "Necesidades"])
 # Menú de navegación en la barra lateral
 st.sidebar.title("Menú de Navegación")
-menu = st.sidebar.radio("Ir a:", ["Registrar Alimento", "Inventario de alimentos", "Organizaciones y personas"])
+menu = st.sidebar.radio("Ir a:", ["Registrar Alimento", "Inventario de alimentos", "Registrar Usuario", "Organizaciones y personas"])
 
 # 1. Registrar información de usuarios
 if menu == "Registrar Alimento":
@@ -50,6 +50,28 @@ elif menu == "Inventario de alimentos":
             file_name="usuarios_registrados.csv",
             mime="text/csv",
         )
+
+# 1. Registrar información de usuarios
+if menu == "Registrar Usuario":
+    st.title("Registro de Usuarios")
+    with st.form("form_registro"):
+        nit = st.text_input("Nit/CC:")
+        nombre = st.text_input("Nombre:")
+        necesidad = st.text_input("Necesidades:")
+        
+        # Botón de envío
+        submitted = st.form_submit_button("Registrar")
+        
+        if submitted:
+            if nombre and correo:
+                nuevo_usuario = {"Nombre": nombre, "Correo": correo, "Fecha de Registro": fecha_registro}
+                st.session_state["users_data"] = pd.concat(
+                    [st.session_state["org_data"], pd.DataFrame([nuevo_usuario])],
+                    ignore_index=True
+                )
+                st.success(f"Usuario {nombre} registrado exitosamente.")
+            else:
+                st.error("Por favor, completa todos los campos.")
 
 # 3. Generar alertas
 elif menu == "Generar Alertas":
