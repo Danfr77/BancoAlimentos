@@ -30,7 +30,7 @@ if menu == "Registrar Alimento":
                 #dias_cad = dias_cad.dt.date()
                 #dias_cad = dias_cad.days()
 
-                    estado = dias_cad #("caducado")
+                estado = dias_cad #("caducado")
                 nuevo_usuario = {"Alimento": alimento,"Tipo": tipo, "Cantidad": cantidad, "Fecha de recepción": fecha_recepcion, "Fecha de caducidad": fecha_caducidad, "Estado": estado}
                 st.session_state["users_data"] = pd.concat(
                     [st.session_state["users_data"], pd.DataFrame([nuevo_usuario])],
