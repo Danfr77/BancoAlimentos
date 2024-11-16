@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 # Crear un DataFrame en memoria para almacenar la información
 if "users_data" and "users2_data" not in st.session_state:
     st.session_state["users_data"] = pd.DataFrame(columns=["Alimento","Tipo", "Cantidad", "Fecha de recepción", "Fecha de caducidad", "Días para caducar"])
-    st.session_state["users2_data"] = pd.DataFrame(columns=["Nombre", "Correo", "Fecha de Registro"])
+    st.session_state["users2_data"] = pd.DataFrame(columns=["Nombre", "Correo", "Necesidades"])
 
 # Menú de navegación en la barra lateral
 st.sidebar.title("Menú de Navegación")
