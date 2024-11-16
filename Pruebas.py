@@ -29,7 +29,7 @@ if menu == "Registrar Alimento":
                 dias_cad = hoy - fecha_caducidad.date()
                 if dias_cad > 7:
                     estado = ("apto para consumo")
-                else if dias_cad < 7 and dias_cad > 0 :
+                elif dias_cad < 7 and dias_cad > 0 :
                     estado = ("Proximo a caducar")
                 else:
                     estado = ("caducado")
