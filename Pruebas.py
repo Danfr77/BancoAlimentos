@@ -54,7 +54,7 @@ elif menu == "Inventario de alimentos":
 # 1. Registrar información de usuarios
 if menu == "Registrar Usuario":
     st.title("Registro de Usuarios")
-    with st.form("form_registro"):
+    with st.form("form_registro2"):
         nit = st.text_input("Nit/CC:")
         nombre = st.text_input("Nombre:")
         necesidad = st.text_input("Necesidades:")
