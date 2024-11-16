@@ -24,7 +24,10 @@ if menu == "Registrar Usuario":
         if submitted:
             if nombre and correo:
                 nuevo_usuario = {"Nombre": nombre, "Correo": correo, "Fecha de Registro": fecha_registro}
-                st.session_state["users_data"] = pd.concat([st.session_state["users_data"], pd.DataFrame([nuevo_usuario])], ignore_index=True)
+                st.session_state["users_data"] = pd.concat(
+                    [st.session_state["users_data"], pd.DataFrame([nuevo_usuario])],
+                    ignore_index=True
+                )
                 st.success(f"Usuario {nombre} registrado exitosamente.")
             else:
                 st.error("Por favor, completa todos los campos.")
@@ -37,7 +40,12 @@ elif menu == "Consultar Usuarios":
         st.warning("No hay usuarios registrados.")
     else:
         st.dataframe(st.session_state["users_data"])
-        st.download_button( "Descargar datos", st.session_state["users_data"].to_csv(index=False),file_name="usuarios_registrados.csv", mime="text/csv")
+        st.download_button(
+            "Descargar datos",
+            st.session_state["users_data"].to_csv(index=False),
+            file_name="usuarios_registrados.csv",
+            mime="text/csv",
+        )
 
 # 3. Generar alertas
 elif menu == "Generar Alertas":
@@ -46,18 +54,29 @@ elif menu == "Generar Alertas":
     if st.session_state["users_data"].empty:
         st.warning("No hay usuarios registrados.")
     else:
-        # Convertir la columna "Fecha de Registro" al formato datetime
-        st.session_state["users_data"]["Fecha de Registro"] = pd.to_datetime(st.session_state["users_data"]["Fecha de Registro"])
+        # Validar y convertir "Fecha de Registro" a datetime si es necesario
+        if not pd.api.types.is_datetime64_any_dtype(st.session_state["users_data"]["Fecha de Registro"]):
+            st.session_state["users_data"]["Fecha de Registro"] = pd.to_datetime(
+                st.session_state["users_data"]["Fecha de Registro"], errors="coerce"
+            )
         
-        # Calcular diferencia de fechas
-        hoy = datetime.today().date()
-        st.session_state["users_data"]["Días desde registro"] = (hoy - st.session_state["users_data"]["Fecha de Registro"].dt.date).dt.days
-        
-        # Filtrar usuarios registrados en los últimos 7 días
-        usuarios_recientes = st.session_state["users_data"][st.session_state["users_data"]["Días desde registro"] < 7]
-        
-        if usuarios_recientes.empty:
-            st.info("No hay usuarios registrados en los últimos 7 días.")
+        # Comprobar si hay fechas inválidas
+        if st.session_state["users_data"]["Fecha de Registro"].isnull().any():
+            st.error("Algunas fechas de registro no son válidas. Por favor, verifica los datos.")
         else:
-            st.success("Usuarios registrados en los últimos 7 días:")
-            st.dataframe(usuarios_recientes)
+            # Calcular la diferencia de días
+            hoy = datetime.today().date()
+            st.session_state["users_data"]["Días desde registro"] = (
+                hoy - st.session_state["users_data"]["Fecha de Registro"].dt.date
+            ).dt.days
+            
+            # Filtrar usuarios registrados en los últimos 7 días
+            usuarios_recientes = st.session_state["users_data"][
+                st.session_state["users_data"]["Días desde registro"] < 7
+            ]
+            
+            if usuarios_recientes.empty:
+                st.info("No hay usuarios registrados en los últimos 7 días.")
+            else:
+                st.success("Usuarios registrados en los últimos 7 días:")
+                st.dataframe(usuarios_recientes)
