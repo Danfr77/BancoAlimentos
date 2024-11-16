@@ -24,7 +24,7 @@ if menu == "Registrar Alimento":
         submitted = st.form_submit_button("Registrar")
         
         if submitted:
-            if alimento and tipo and cantidad and fecha_recepcion and fecha_registo:
+            if alimento and tipo and cantidad and fecha_recepcion and fecha_registro:
                 hoy = datetime.today().date()
                 dias_cad = hoy - fecha_caducidad.date()
                 if dias_cad > 7:
