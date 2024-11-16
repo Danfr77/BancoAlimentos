@@ -18,7 +18,7 @@ if menu == "Registrar Alimento":
         tipo = st.text_input("Tipo:")
         cantidad = st.text_input("Cantidad:")
         fecha_recepcion = st.date_input("Fecha de recepción:", value=datetime.today())
-        fecha_registro = st.date_input("Fecha de caducidad:", value=datetime.today())
+        fecha_caducidad = st.date_input("Fecha de caducidad:", value=datetime.today())
         
         # Botón de envío
         submitted = st.form_submit_button("Registrar")
