@@ -4,37 +4,47 @@ from datetime import datetime, timedelta
 
 # Crear un DataFrame en memoria para almacenar la información
 if "users_data" not in st.session_state:
-    st.session_state["users_data"] = pd.DataFrame(columns=["Nombre", "Correo", "Fecha de Registro"])
+    st.session_state["users_data"] = pd.DataFrame(columns=["Alimento","Tipo", "Cantidad", "Fecha de recepción", "Fecha de caducidad", "Estado"])
 
 # Menú de navegación en la barra lateral
 st.sidebar.title("Menú de Navegación")
-menu = st.sidebar.radio("Ir a:", ["Registrar Usuario", "Consultar Usuarios", "Generar Alertas"])
+menu = st.sidebar.radio("Ir a:", ["Registrar Alimento", "Inventario de alimentos", "Organizaciones y personas"])
 
 # 1. Registrar información de usuarios
-if menu == "Registrar Usuario":
-    st.title("Registro de Usuarios")
+if menu == "Registrar Alimento":
+    st.title("Registro de Alimentos")
     with st.form("form_registro"):
-        nombre = st.text_input("Nombre:")
-        correo = st.text_input("Correo:")
-        fecha_registro = st.date_input("Fecha de registro:", value=datetime.today())
+        alimento = st.text_input("Alimento:")
+        tipo = st.text_input("Tipo:")
+        cantidad = st.text_input("Cantidad:")
+        fecha_recepcion = st.date_input("Fecha de recepción:", value=datetime.today())
+        fecha_registro = st.date_input("Fecha de caducidad:", value=datetime.today())
         
         # Botón de envío
         submitted = st.form_submit_button("Registrar")
         
         if submitted:
-            if nombre and correo:
-                nuevo_usuario = {"Nombre": nombre, "Correo": correo, "Fecha de Registro": fecha_registro}
+            if alimento and tipo and cantidad and fecha_recepcion and fecha_registo:
+                hoy = datetime.today().date()
+                dias_cad = hoy - fecha_caducidad.date()
+                if dias_cad > 7:
+                    estado = ("apto para consumo")
+                else if dias_cad < 7 and dias_cad > 0 :
+                    estado = ("Proximo a caducar")
+                else:
+                    estado = ("caducado")
+                nuevo_usuario = {"Alimento": alimento,"Tipo": tipo, "Cantidad": cantidad, "Fecha de recepción": fecha_recepcion, "Fecha de caducidad": fecha_registro, "Estado": estado}
                 st.session_state["users_data"] = pd.concat(
                     [st.session_state["users_data"], pd.DataFrame([nuevo_usuario])],
                     ignore_index=True
                 )
-                st.success(f"Usuario {nombre} registrado exitosamente.")
+                st.success(f"Alimento {alimento} registrado exitosamente.")
             else:
                 st.error("Por favor, completa todos los campos.")
 
 # 2. Consultar información de usuarios
-elif menu == "Consultar Usuarios":
-    st.title("Consulta de Usuarios")
+elif menu == "Inventario de alimentos":
+    st.title("Inventario de alimentos")
     
     if st.session_state["users_data"].empty:
         st.warning("No hay usuarios registrados.")
