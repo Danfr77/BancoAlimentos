@@ -3,9 +3,10 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 # Crear un DataFrame en memoria para almacenar la información
-if "users_data" not in st.session_state:
+if "users_data" and "users2_data" not in st.session_state:
     st.session_state["users_data"] = pd.DataFrame(columns=["Alimento","Tipo", "Cantidad", "Fecha de recepción", "Fecha de caducidad", "Días para caducar"])
-    st.session_state["org_data"] = pd.DataFrame(columns=["nit / CC","Nombre", "Necesidades"])
+    st.session_state["users2_data"] = pd.DataFrame(columns=["Nombre", "Correo", "Fecha de Registro"])
+
 # Menú de navegación en la barra lateral
 st.sidebar.title("Menú de Navegación")
 menu = st.sidebar.radio("Ir a:", ["Registrar Alimento", "Inventario de alimentos", "Registrar Usuario", "Organizaciones y personas"])
@@ -54,19 +55,19 @@ elif menu == "Inventario de alimentos":
 # 3. Registrar información de usuarios
 if menu == "Registrar Usuario":
     st.title("Registro de Usuarios")
-    with st.form("form_registro2"):
-        nit = st.text_input("Nit/CC:")
+    with st.form("form_registro"):
         nombre = st.text_input("Nombre:")
+        correo = st.text_input("Correo:")
         necesidad = st.text_input("Necesidades:")
         
         # Botón de envío
         submitted = st.form_submit_button("Registrar")
         
         if submitted:
-            if nit and nombre and necesidad:
-                nuevo_usuario = {"nit / CC": nit,"Nombre": nombre, "Necesidades": necesidad}
-                st.session_state["org_data"] = pd.concat(
-                    [st.session_state["org_data"], pd.DataFrame([nuevo_usuario])],
+            if nombre and correo:
+                nuevo_usuario = {"Nombre": nombre, "Correo": correo, "Necesidades": necesidad}
+                st.session_state["users2_data"] = pd.concat(
+                    [st.session_state["users2_data"], pd.DataFrame([nuevo_usuario])],
                     ignore_index=True
                 )
                 st.success(f"Usuario {nombre} registrado exitosamente.")
