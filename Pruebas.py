@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 # Crear un DataFrame en memoria para almacenar la información
 if "users_data" not in st.session_state:
-    st.session_state["users_data"] = pd.DataFrame(columns=["Alimento","Tipo", "Cantidad", "Fecha de recepción", "Fecha de caducidad", "Estado"])
+    st.session_state["users_data"] = pd.DataFrame(columns=["Alimento","Tipo", "Cantidad", "Fecha de recepción", "Fecha de caducidad", "Días para caducar"])
 
 # Menú de navegación en la barra lateral
 st.sidebar.title("Menú de Navegación")
@@ -27,14 +27,7 @@ if menu == "Registrar Alimento":
             if alimento and tipo and cantidad and fecha_recepcion and fecha_caducidad:
                 hoy = datetime.today().date()
                 dias_cad = hoy - fecha_caducidad
-                dias_cad = dias_cad.datetime.days()
-                if dias_cad > 7:
-                    estado = ("apto para consumo")
-                elif dias_cad < 7 and dias_cad > 0 :
-                    estado = ("Proximo a caducar")
-                else:
-                    estado = ("caducado")
-                nuevo_usuario = {"Alimento": alimento,"Tipo": tipo, "Cantidad": cantidad, "Fecha de recepción": fecha_recepcion, "Fecha de caducidad": fecha_caducidad, "Estado": estado}
+                nuevo_usuario = {"Alimento": alimento,"Tipo": tipo, "Cantidad": cantidad, "Fecha de recepción": fecha_recepcion, "Fecha de caducidad": fecha_caducidad, "Días para caducar": dias_cad}
                 st.session_state["users_data"] = pd.concat(
                     [st.session_state["users_data"], pd.DataFrame([nuevo_usuario])],
                     ignore_index=True
