@@ -74,3 +74,13 @@ if menu == "Registrar Usuario":
             else:
                 st.error("Por favor, completa todos los campos.")
 
+
+# 2. Consultar información de usuarios
+elif menu == "Organizaciones y personas":
+    st.title("Organizaciones y personas")
+    
+    if st.session_state["users2_data"].empty:
+        st.warning("No hay usuarios registrados.")
+    else:
+        st.dataframe(st.session_state["users2_data"])
+        )
