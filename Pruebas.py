@@ -25,7 +25,7 @@ if menu == "Registrar Alimento":
         
         if submitted:
             if alimento and tipo and cantidad and fecha_recepcion and fecha_registro:
-                hoy = datetime.today().date()
+                hoy = datetime.today()
                 dias_cad = hoy - fecha_caducidad
                 if dias_cad > 7:
                     estado = ("apto para consumo")
