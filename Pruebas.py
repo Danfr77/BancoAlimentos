@@ -51,7 +51,7 @@ elif menu == "Inventario de alimentos":
             mime="text/csv",
         )
 
-# 1. Registrar información de usuarios
+# 3. Registrar información de usuarios
 if menu == "Registrar Usuario":
     st.title("Registro de Usuarios")
     with st.form("form_registro2"):
@@ -73,36 +73,3 @@ if menu == "Registrar Usuario":
             else:
                 st.error("Por favor, completa todos los campos.")
 
-# 3. Generar alertas
-elif menu == "Generar Alertas":
-    st.title("Alertas de Registros Recientes")
-    
-    if st.session_state["users_data"].empty:
-        st.warning("No hay usuarios registrados.")
-    else:
-        # Validar y convertir "Fecha de Registro" a datetime si es necesario
-        if not pd.api.types.is_datetime64_any_dtype(st.session_state["users_data"]["Fecha de Registro"]):
-            st.session_state["users_data"]["Fecha de Registro"] = pd.to_datetime(
-                st.session_state["users_data"]["Fecha de Registro"], errors="coerce"
-            )
-        
-        # Comprobar si hay fechas inválidas
-        if st.session_state["users_data"]["Fecha de Registro"].isnull().any():
-            st.error("Algunas fechas de registro no son válidas. Por favor, verifica los datos.")
-        else:
-            # Calcular la diferencia de días
-            hoy = datetime.today().date()
-            st.session_state["users_data"]["Días desde registro"] = (
-                hoy - st.session_state["users_data"]["Fecha de Registro"].dt.date
-            ).dt.days
-            
-            # Filtrar usuarios registrados en los últimos 7 días
-            usuarios_recientes = st.session_state["users_data"][
-                st.session_state["users_data"]["Días desde registro"] < 7
-            ]
-            
-            if usuarios_recientes.empty:
-                st.info("No hay usuarios registrados en los últimos 7 días.")
-            else:
-                st.success("Usuarios registrados en los últimos 7 días:")
-                st.dataframe(usuarios_recientes)
